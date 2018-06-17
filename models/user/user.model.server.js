@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var userSchema = require('./user.schema.server');
-var userModel = mongoose.model('User',userSchema);
+var userModel = mongoose.model('UserModel',userSchema);
 
 function findUserById(userId){
   return userModel.findById(userId);
