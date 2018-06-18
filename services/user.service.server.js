@@ -14,10 +14,17 @@ function update(req,res){
   var user = req.body;
   var sessionUser= req.session['currentUser'];
   if(sessionUser !== "undefined"){
+
+    if(user.username!==null && user.firstName !== null
+        && user.lastName !==null && user.email !== null && user.phone !== null
+       && user.address !== null){  
   userModel.update(user,sessionUser).then(function(user){
     req.session['currentUser'] = user;
     res.send(user);
-})}
+})
+       }
+
+}
 }
 
 function findUserById(req,res){
@@ -55,16 +62,18 @@ function findAllUsers(req,res){
 function findUserByUsername(req,res){
     var username = req.params;
   userModel.findUserByUsername(username).then(function(user){
-    res.send({
-        errorMsg:"Username exists"
-    });  
-  })
-}
+    if(user.length > 0){
+        res.send({errorMsg:"Username exists"})
+    }else{
+        res.send(user)
+    }});  
+  }
 
 function createUser(req,res){
     var user = req.body;
     userModel.createUser(user).then(function(user){
         req.session['currentUser'] = user;
+        req.session.cookie._expires = new Date(Date.now() + (30*60*1000));
         res.send(user);
     })
 
