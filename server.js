@@ -28,7 +28,9 @@ app.get('/', function (req, res) {
 app.use(session({
     resave:false,
     saveUninitialized:true,
-    secret:'any string'
+    secret:'any string',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000
 }));
 
 app.get('/api/session/set/:name/:value', 

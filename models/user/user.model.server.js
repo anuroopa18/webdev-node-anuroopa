@@ -6,6 +6,10 @@ function findUserById(userId){
   return userModel.findById(userId);
 }
 
+function findUserByUsername(username){
+  return userModel.find({username:"username"});
+}
+
 function createUser(user){
     return userModel.create(user);
 }
@@ -18,11 +22,26 @@ function findUserByCredentials(credentials){
   return userModel.findOne(credentials,{username:1});
 }
 
+function update(user,sessionUser){
+  return userModel.updateOne({_id:sessionUser._id}, 
+  { $set: { 
+    username : user.username ,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email:user.email,
+    phone:user.phone,
+    address:user.address
+  }})
+
+}
+
 var api ={
     createUser:createUser,
     findAllUsers:findAllUsers,
     findUserByCredentials:findUserByCredentials,
-    findUserById:findUserById
+    findUserById:findUserById,
+    findUserByUsername:findUserByUsername,
+    update:update
     
 }
 
