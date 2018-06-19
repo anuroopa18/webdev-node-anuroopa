@@ -7,7 +7,7 @@ var sectionModel = require('../models/section/section.model.server');
 var enrollmentModel = require('../models/enrollment/enrollment.model.server')
 
 function findSectionsForStudent(req,res){
-   var currentUser= req.session.currentUser;
+   var currentUser= req.session.user;
    var studentId = currentUser._id;
    enrollmentModel.findSectionsForStudent(studentId)
    .then(function(enrollments){
@@ -17,7 +17,7 @@ function findSectionsForStudent(req,res){
 
 function enrollStudentInSection(req,res){
    var sectionId = req.params.sectionId;
-   var currentUser = req.session.currentUser;
+   var currentUser = req.session.user;
    var studentId = currentUser._id;
    var enrollment = {
     student: studentId,
