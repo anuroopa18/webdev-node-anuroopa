@@ -12,14 +12,17 @@ var userModel = require('../models/user/user.model.server');
 
 function update(req,res){
   var user = req.body;
-  var sessionUser= req.session['currentUser'];
+  var sessionUser= req.session.user;
   if(sessionUser !== "undefined"){
 
-    if(user.username!==null && user.firstName !== null
-        && user.lastName !==null && user.email !== null && user.phone !== null
-       && user.address !== null){  
+    if((user.username!==null && user.username.length !== 0)  &&
+       (user.firstName !== null && user.firstName.length !== 0) && 
+       (user.lastName !==null && user.lastName.length !== 0 )&& 
+       (user.email !== null && user.email.length !== 0 ) && 
+       (user.phone !== null && user.phone.length !== 0 )
+       && (user.address !== null && user.address.length !== 0)){  
   userModel.update(user,sessionUser).then(function(user){
-    req.session['currentUser'] = user;
+    req.session.user = user;
     res.send(user);
 })
        }
@@ -39,8 +42,13 @@ function login(req,res){
     var credentials =req.body;
     userModel.findUserByCredentials(credentials)
     .then(function(user){
-        req.session['currentUser'] = user;
-        res.json(user);
+        if(user != null){
+        req.session.user = user;
+        res.send(user);
+        }
+        else{
+            res.send({check:"User does not exist"})
+        }
     })
 }
 
@@ -50,7 +58,11 @@ function logout(req,res){
 }
 
 function profile(req,res) {
-   res.send(req.session['currentUser']);
+    var currentUser= req.session.user;
+    console.log(currentUser._id);
+  userModel.findUserById(currentUser._id).then(function(user){
+      res.send(user);
+  })
 }
 
 function findAllUsers(req,res){
@@ -60,7 +72,7 @@ function findAllUsers(req,res){
 }
 
 function findUserByUsername(req,res){
-    var username = req.params;
+    var username = req.params['username'];
   userModel.findUserByUsername(username).then(function(user){
     if(user.length > 0){
         res.send({errorMsg:"Username exists"})
@@ -72,8 +84,7 @@ function findUserByUsername(req,res){
 function createUser(req,res){
     var user = req.body;
     userModel.createUser(user).then(function(user){
-        req.session['currentUser'] = user;
-        req.session.cookie._expires = new Date(Date.now() + (30*60*1000));
+        req.session.user = user;
         res.send(user);
     })
 

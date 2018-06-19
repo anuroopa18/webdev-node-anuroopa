@@ -7,7 +7,7 @@ function findUserById(userId){
 }
 
 function findUserByUsername(username){
-  return userModel.find({username:"username"});
+  return userModel.find({username:username});
 }
 
 function createUser(user){
@@ -23,7 +23,7 @@ function findUserByCredentials(credentials){
 }
 
 function update(user,sessionUser){
-  return userModel.updateOne({_id:sessionUser._id}, 
+  return userModel.save({_id:sessionUser._id}, 
   { $set: { 
     username : user.username ,
     firstName: user.firstName,

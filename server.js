@@ -26,11 +26,13 @@ app.get('/', function (req, res) {
 })
 
 app.use(session({
+    cookie: {
+        maxAge: 1800000
+      },
     resave:false,
     saveUninitialized:true,
     secret:'any string',
-    duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000
+    
 }));
 
 app.get('/api/session/set/:name/:value', 
