@@ -6,14 +6,24 @@ app.post('/api/logout',logout);
 app.post('/api/login',login);
 app.get('/api/user/:userId',findUserById);
 app.get('/api/users/:username',findUserByUsername);
-app.put('/api/user',update)
+app.put('/api/user',update);
+app.get('/api/checkUserLogin',checkUserLogin)
 var userModel = require('../models/user/user.model.server');
 
+function checkUserLogin(req,res){
+    var user = req.session.user;
+    if(user !== undefined){
+        res.send({msg:"User is logged in"});
+    }
+    else{
+        res.send({msg:"User not logged in"});
+    }
+}
 
 function update(req,res){
   var user = req.body;
   var sessionUser= req.session.user;
-  if(sessionUser !== "undefined"){
+  if(sessionUser !== undefined){
     if((user.username!==null && user.username.length !== 0)  &&
        (user.firstName !== null && user.firstName.length !== 0) && 
        (user.lastName !==null && user.lastName.length !== 0 )&& 

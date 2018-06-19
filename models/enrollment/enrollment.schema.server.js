@@ -4,6 +4,7 @@ var enrollmentSchema = mongoose.Schema({
                ref:'SectionModel'},
     student:{type: mongoose.Schema.Types.ObjectId, 
                ref:'UserModel'},
-    grade:String
+    grade:String,
+    course:Number
 },{collection:'enrollments'});
 module.exports = enrollmentSchema;
