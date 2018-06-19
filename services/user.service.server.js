@@ -14,15 +14,14 @@ function update(req,res){
   var user = req.body;
   var sessionUser= req.session.user;
   if(sessionUser !== "undefined"){
-
     if((user.username!==null && user.username.length !== 0)  &&
        (user.firstName !== null && user.firstName.length !== 0) && 
        (user.lastName !==null && user.lastName.length !== 0 )&& 
        (user.email !== null && user.email.length !== 0 ) && 
        (user.phone !== null && user.phone.length !== 0 )
        && (user.address !== null && user.address.length !== 0)){  
+        req.session.user = sessionUser;
   userModel.update(user,sessionUser).then(function(user){
-    req.session.user = user;
     res.send(user);
 })
        }
