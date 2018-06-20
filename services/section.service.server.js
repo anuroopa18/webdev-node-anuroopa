@@ -11,6 +11,10 @@ module.exports = function (app) {
     var sectionModel = require('../models/section/section.model.server');
     var enrollmentModel = require('../models/enrollment/enrollment.model.server')
 
+    section={};
+    availableSeats=0;
+    
+
     function update(req, res) {
         var section = req.body;
         var sectionId = req.params.sectionId;
@@ -75,15 +79,25 @@ module.exports = function (app) {
             section: sectionId,
             course: courseId
         };
-
-        sectionModel.decrementSectionSeats(sectionId)
-            .then(function () {
-                return enrollmentModel
-                    .enrollStudentInSection(enrollment)
-            })
-            .then(function (enrollment) {
-                res.json(enrollment);
-            });
+        section= sectionModel.findSectionById(sectionId)
+        .then( section => this.section = section)
+        .then( section => {
+            this.availableSeats = section.availableSeats;
+            if(availableSeats !== 0) {
+                sectionModel.decrementSectionSeats(sectionId)
+                .then(function () {
+                    return enrollmentModel
+                        .enrollStudentInSection(enrollment)
+                })
+                .then(function (enrollment) {
+                    res.json(enrollment);
+                })
+            }
+            else{
+                res.send({msg:"Cannot enroll"})
+            }
+        })
+        
 
     }
 

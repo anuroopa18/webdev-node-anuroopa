@@ -23,7 +23,7 @@ function decrementSectionSeats(sectionId){
     return sectionModel.update({
     _id: sectionId
     },{
-        $inc:{seats: -1}
+        $inc:{availableSeats: -1}
     })
 }
 
@@ -31,8 +31,8 @@ function update(section,sectionId){
         return sectionModel.updateOne({_id:sectionId}, 
         { $set: { 
           name : section.name,
-          seats: section.seats
-          
+          seats: section.seats,
+          availableSeats: section.availableSeats        
         }})
       
       
@@ -42,7 +42,7 @@ function incrementSectionSeats(sectionId){
     return sectionModel.update({
     _id: sectionId
     },{
-        $inc:{seats: +1}
+        $inc:{availableSeats: +1}
     })
 }
 
