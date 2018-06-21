@@ -11,6 +11,8 @@ function deleteSection(sectionId){
         });
 }
 
+
+
 function findSectionsForCourse(courseId){
   return sectionModel.find({courseId:courseId});
 }

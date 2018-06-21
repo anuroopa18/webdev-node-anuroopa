@@ -8,6 +8,7 @@ module.exports = function (app) {
     app.delete('/api/enrollment/:sectionId', deleteEnrollmentForSection);
     app.get('/api/sections/:sectionId', findSectionById);
     app.put('/api/section/update/:sectionId', update);
+    app.delete('/api/unenroll/:sectionId',unenroll);
     var sectionModel = require('../models/section/section.model.server');
     var enrollmentModel = require('../models/enrollment/enrollment.model.server')
 
@@ -79,7 +80,8 @@ module.exports = function (app) {
             section: sectionId,
             course: courseId
         };
-        section= sectionModel.findSectionById(sectionId)
+
+        sectionModel.findSectionById(sectionId)
         .then( section => this.section = section)
         .then( section => {
             this.availableSeats = section.availableSeats;
@@ -98,6 +100,18 @@ module.exports = function (app) {
             }
         })
         
+
+    }
+
+    function unenroll(req,res){
+       var sectionId = req.params.sectionId;
+       var currentUser = req.session.user;
+       var studentId = currentUser._id;
+       sectionModel.incrementSectionSeats(sectionId).
+       then(function() {
+           return enrollmentModel.unenroll(sectionId,studentId)
+           .then(() => res.sendStatus(200))
+       })
 
     }
 
